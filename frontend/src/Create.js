@@ -1,16 +1,16 @@
-import React,{useState} from "react";
+import React, { useState } from "react";
 import axios from "axios";
 
 function Create(){
 
-const [name,setName]=useState("");
-const [skills,setSkills]=useState("");
-const [bio,setBio]=useState("");
-const [image,setImage]=useState(null);
+const [name,setName] = useState("");
+const [skills,setSkills] = useState("");
+const [bio,setBio] = useState("");
+const [image,setImage] = useState(null);
 
-const submit=async(e)=>{
+const createPortfolio = async () => {
 
-e.preventDefault();
+try{
 
 const formData = new FormData();
 
@@ -19,45 +19,61 @@ formData.append("skills",skills);
 formData.append("bio",bio);
 formData.append("image",image);
 
-await axios.post("http://localhost:5000/create",formData);
+await axios.post(
+"http://localhost:5000/create",
+formData
+);
 
-alert("Portfolio Created");
+alert("Portfolio Created Successfully");
+
+}
+catch(err){
+
+console.log(err);
+alert("Error creating portfolio");
 
 }
 
+};
+
 return(
 
-<form onSubmit={submit}>
+<div className="page">
 
 <h2>Create Portfolio</h2>
 
-<input placeholder="Name"
+<div className="form">
+
+<input
+placeholder="Name"
+value={name}
 onChange={(e)=>setName(e.target.value)}
 />
 
-<br/>
-
-<input placeholder="Skills"
+<input
+placeholder="Skills"
+value={skills}
 onChange={(e)=>setSkills(e.target.value)}
 />
 
-<br/>
-
-<input placeholder="Bio"
+<textarea
+placeholder="Bio"
+value={bio}
 onChange={(e)=>setBio(e.target.value)}
 />
 
-<br/>
-
-<input type="file"
+<input
+type="file"
 onChange={(e)=>setImage(e.target.files[0])}
 />
 
-<br/>
+<button onClick={createPortfolio}>
+Create Portfolio
+</button>
 
-<button>Create</button>
+</div>
 
-</form>
+</div>
 
 )
 

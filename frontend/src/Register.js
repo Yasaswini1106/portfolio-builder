@@ -1,29 +1,30 @@
 import React,{useState} from "react";
 import axios from "axios";
+import {useNavigate} from "react-router-dom";
 
 function Register(){
 
 const [email,setEmail]=useState("");
 const [password,setPassword]=useState("");
 
-const submit=async(e)=>{
- e.preventDefault();
+const navigate = useNavigate();
 
- await axios.post("http://localhost:5000/register",{
-  email,
-  password
- });
+const register = async ()=>{
 
- alert("Registered successfully");
-}
+await axios.post(
+"http://localhost:5000/register",
+{email,password}
+);
+
+navigate("/");
+
+};
 
 return(
 
-<div className="form">
+<div className="auth-card">
 
 <h2>Register</h2>
-
-<form onSubmit={submit}>
 
 <input
 placeholder="Email"
@@ -36,13 +37,11 @@ placeholder="Password"
 onChange={(e)=>setPassword(e.target.value)}
 />
 
-<button>Register</button>
-
-</form>
+<button onClick={register}>Register</button>
 
 </div>
 
-)
+);
 
 }
 

@@ -2,7 +2,6 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const multer = require("multer");
-const path = require("path");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
@@ -20,8 +19,8 @@ app.use("/uploads", express.static("uploads"));
 /* DATABASE CONNECTION */
 
 mongoose.connect("mongodb://127.0.0.1:27017/portfolioDB")
-.then(()=>console.log("MongoDB Connected"))
-.catch(err=>console.log(err));
+.then(() => console.log("MongoDB Connected"))
+.catch(err => console.log(err));
 
 /* IMAGE UPLOAD SETUP */
 
@@ -30,11 +29,11 @@ const storage = multer.diskStorage({
   cb(null,"uploads/");
  },
  filename: function(req,file,cb){
-  cb(null,Date.now()+"-"+file.originalname);
+  cb(null,Date.now() + "-" + file.originalname);
  }
 });
 
-const upload = multer({storage:storage});
+const upload = multer({ storage });
 
 /* REGISTER USER */
 
@@ -44,10 +43,14 @@ app.post("/register", async (req,res)=>{
 
  const {email,password} = req.body;
 
+ if(!email || !password){
+  return res.status(400).json({message:"Email and password required"});
+ }
+
  const existingUser = await User.findOne({email});
 
  if(existingUser){
-  return res.send("User already exists");
+  return res.status(400).json({message:"User already exists"});
  }
 
  const hashedPassword = await bcrypt.hash(password,10);
@@ -59,11 +62,11 @@ app.post("/register", async (req,res)=>{
 
  await user.save();
 
- res.send("User Registered Successfully");
+ res.json({message:"User Registered Successfully"});
 
  }
  catch(err){
-  res.status(500).send(err);
+  res.status(500).json({error:err.message});
  }
 
 });
@@ -79,25 +82,29 @@ app.post("/login", async (req,res)=>{
  const user = await User.findOne({email});
 
  if(!user){
-  return res.send("User not found");
+  return res.status(404).json({message:"User not found"});
  }
 
- const valid = await bcrypt.compare(password,user.password);
+ const validPassword = await bcrypt.compare(password,user.password);
 
- if(!valid){
-  return res.send("Wrong password");
+ if(!validPassword){
+  return res.status(401).json({message:"Wrong password"});
  }
 
- const token = jwt.sign({id:user._id},"secretkey");
+ const token = jwt.sign(
+  {id:user._id},
+  "secretkey",
+  {expiresIn:"1d"}
+ );
 
  res.json({
   message:"Login successful",
-  token:token
+  token
  });
 
  }
  catch(err){
-  res.status(500).send(err);
+  res.status(500).json({error:err.message});
  }
 
 });
@@ -108,20 +115,25 @@ app.post("/create", upload.single("image"), async(req,res)=>{
 
  try{
 
+ const {name,skills,bio} = req.body;
+
  const portfolio = new Portfolio({
-  name:req.body.name,
-  skills:req.body.skills,
-  bio:req.body.bio,
-  image:req.file ? req.file.filename : ""
+  name,
+  skills,
+  bio,
+  image: req.file ? req.file.filename : ""
  });
 
  await portfolio.save();
 
- res.send("Portfolio Created");
+ res.json({
+  message:"Portfolio Created Successfully",
+  portfolio
+ });
 
  }
  catch(err){
-  res.status(500).send(err);
+  res.status(500).json({error:err.message});
  }
 
 });
@@ -132,13 +144,13 @@ app.get("/portfolios", async (req,res)=>{
 
  try{
 
- const data = await Portfolio.find();
+ const portfolios = await Portfolio.find();
 
- res.json(data);
+ res.json(portfolios);
 
  }
  catch(err){
-  res.status(500).send(err);
+  res.status(500).json({error:err.message});
  }
 
 });
@@ -151,17 +163,19 @@ app.delete("/delete/:id", async(req,res)=>{
 
  await Portfolio.findByIdAndDelete(req.params.id);
 
- res.send("Portfolio Deleted");
+ res.json({message:"Portfolio Deleted"});
 
  }
  catch(err){
-  res.status(500).send(err);
+  res.status(500).json({error:err.message});
  }
 
 });
 
-/* START SERVER */
+/* SERVER START */
 
-app.listen(5000, ()=>{
- console.log("Server running on port 5000");
+const PORT = 5000;
+
+app.listen(PORT, ()=>{
+ console.log(`Server running on port ${PORT}`);
 });

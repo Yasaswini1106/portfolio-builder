@@ -1,50 +1,51 @@
 import React,{useState} from "react";
 import axios from "axios";
+import {useNavigate} from "react-router-dom";
 
 function Login(){
 
 const [email,setEmail]=useState("");
 const [password,setPassword]=useState("");
 
-const submit=async(e)=>{
+const navigate = useNavigate();
 
- e.preventDefault();
+const login = async()=>{
 
- const res = await axios.post("http://localhost:5000/login",{
-  email,
-  password
- });
+const res = await axios.post(
+"http://localhost:5000/login",
+{email,password}
+);
 
- alert(res.data.message);
+localStorage.setItem("token",res.data.token);
 
-}
+navigate("/dashboard");
+
+};
 
 return(
 
-<div className="form">
+<div className="auth-container">
+
+<div className="auth-card">
 
 <h2>Login</h2>
 
-<form onSubmit={submit}>
-
-<input
-placeholder="Email"
+<input placeholder="Email"
 onChange={(e)=>setEmail(e.target.value)}
 />
 
-<input
-type="password"
+<input type="password"
 placeholder="Password"
 onChange={(e)=>setPassword(e.target.value)}
 />
 
-<button>Login</button>
-
-</form>
+<button onClick={login}>Login</button>
 
 </div>
 
-)
+</div>
+
+);
 
 }
 

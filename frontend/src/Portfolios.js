@@ -1,64 +1,26 @@
-import React,{useEffect,useState} from "react";
-import axios from "axios";
+import React from "react";
 
 function Portfolios(){
 
-const [data,setData]=useState([]);
-const [search,setSearch]=useState("");
-
-useEffect(()=>{
-
- axios.get("http://localhost:5000/portfolios")
- .then(res=>{
-  setData(res.data);
- })
- .catch(err=>{
-  console.log(err);
- });
-
-},[]);
-
-const filtered = data.filter(p =>
- p.name.toLowerCase().includes(search.toLowerCase())
-);
-
 return(
 
-<div>
+<div className="page">
 
-<h2>All Portfolios</h2>
+<h2>My Portfolios</h2>
 
-<input
-placeholder="Search portfolio"
-onChange={(e)=>setSearch(e.target.value)}
-/>
+<div className="cards">
 
-{filtered.map((p)=>(
-<div className="card" key={p._id}>
+<div className="card">
+<h3>Developer Portfolio</h3>
+<p>React Developer</p>
+</div>
 
-<img
-src={"http://localhost:5000/uploads/"+p.image}
-width="80"
-alt="profile"
-/>
-
-<h3>{p.name}</h3>
-<p>{p.skills}</p>
-<p>{p.bio}</p>
-
-<button
-onClick={()=>{
-axios.delete("http://localhost:5000/delete/"+p._id)
-.then(()=>{
-window.location.reload();
-})
-}}
->
-Delete
-</button>
+<div className="card">
+<h3>Design Portfolio</h3>
+<p>UI/UX Designer</p>
+</div>
 
 </div>
-))}
 
 </div>
 

@@ -1,73 +1,54 @@
 import React from "react";
 import "./App.css";
-import {BrowserRouter, Routes, Route, Link} from "react-router-dom";
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 
 import Create from "./Create";
 import Portfolios from "./Portfolios";
-import Login from "./Login";
-import Register from "./Register";
 
-/* HOME PAGE */
-
-function Home(){
- return(
-  <div className="card">
-   <h2>Welcome to Portfolio Builder</h2>
-   <p>Create and showcase your professional portfolio easily.</p>
-  </div>
- );
+function Dashboard() {
+  return (
+    <div className="page">
+      <h2>Welcome to Portfolio Builder</h2>
+      <p>
+        Create your professional portfolio and manage all your work in one
+        place.
+      </p>
+    </div>
+  );
 }
 
-/* MAIN APP */
+function Navbar() {
+  return (
+    <div className="navbar">
 
-function App(){
+      <div className="logo">
+        Portfolio Builder
+      </div>
 
- return(
+      <div className="nav-links">
+        <Link to="/">Dashboard</Link>
+        <Link to="/create">Create</Link>
+        <Link to="/portfolios">My Portfolios</Link>
+      </div>
 
-  <BrowserRouter>
+    </div>
+  );
+}
 
-  <div>
+function App() {
+  return (
+    <BrowserRouter>
 
-   <h1 className="title">Portfolio Builder</h1>
+      <Navbar />
 
-   <nav>
+      <Routes>
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/create" element={<Create />} />
+        <Route path="/portfolios" element={<Portfolios />} />
+      </Routes>
 
-    <Link to="/">Home</Link>
-
-    <Link to="/create">Create</Link>
-
-    <Link to="/portfolios">Portfolios</Link>
-
-    <Link to="/login">Login</Link>
-
-    <Link to="/register">Register</Link>
-
-   </nav>
-
-   <div className="container">
-
-   <Routes>
-
-    <Route path="/" element={<Home/>}/>
-
-    <Route path="/create" element={<Create/>}/>
-
-    <Route path="/portfolios" element={<Portfolios/>}/>
-
-    <Route path="/login" element={<Login/>}/>
-
-    <Route path="/register" element={<Register/>}/>
-
-   </Routes>
-
-   </div>
-
-  </div>
-
-  </BrowserRouter>
-
- );
-
+    </BrowserRouter>
+  );
 }
 
 export default App;
