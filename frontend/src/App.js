@@ -1,35 +1,70 @@
 import React from "react";
 import "./App.css";
-import {Routes,Route,Link} from "react-router-dom";
+import {BrowserRouter, Routes, Route, Link} from "react-router-dom";
+
 import Create from "./Create";
 import Portfolios from "./Portfolios";
+import Login from "./Login";
+import Register from "./Register";
 
+/* HOME PAGE */
 
 function Home(){
- return <h2>Welcome to Portfolio Builder</h2>;
+ return(
+  <div className="card">
+   <h2>Welcome to Portfolio Builder</h2>
+   <p>Create and showcase your professional portfolio easily.</p>
+  </div>
+ );
 }
+
+/* MAIN APP */
 
 function App(){
 
  return(
 
- <div className="container">
+  <BrowserRouter>
 
- <h1>Portfolio Builder</h1>
+  <div>
 
- <nav>
- <Link to="/">Home</Link>
- <Link to="/create">Create</Link>
- <Link to="/portfolios">Portfolios</Link>
- </nav>
+   <h1 className="title">Portfolio Builder</h1>
 
- <Routes>
- <Route path="/" element={<Home/>}/>
- <Route path="/create" element={<Create/>}/>
- <Route path="/portfolios" element={<Portfolios/>}/>
- </Routes>
+   <nav>
 
- </div>
+    <Link to="/">Home</Link>
+
+    <Link to="/create">Create</Link>
+
+    <Link to="/portfolios">Portfolios</Link>
+
+    <Link to="/login">Login</Link>
+
+    <Link to="/register">Register</Link>
+
+   </nav>
+
+   <div className="container">
+
+   <Routes>
+
+    <Route path="/" element={<Home/>}/>
+
+    <Route path="/create" element={<Create/>}/>
+
+    <Route path="/portfolios" element={<Portfolios/>}/>
+
+    <Route path="/login" element={<Login/>}/>
+
+    <Route path="/register" element={<Register/>}/>
+
+   </Routes>
+
+   </div>
+
+  </div>
+
+  </BrowserRouter>
 
  );
 
