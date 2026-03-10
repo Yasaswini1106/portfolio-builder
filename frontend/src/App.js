@@ -1,9 +1,11 @@
 import React from "react";
 import "./App.css";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
-
+import {FaUser, FaPlus, FaFolder} from "react-icons/fa";
 import Create from "./Create";
 import Portfolios from "./Portfolios";
+import Login from "./Login";
+import Register from "./Register";
 
 function Dashboard() {
   return (
@@ -26,10 +28,14 @@ function Navbar() {
       </div>
 
       <div className="nav-links">
-        <Link to="/">Dashboard</Link>
-        <Link to="/create">Create</Link>
-        <Link to="/portfolios">My Portfolios</Link>
-      </div>
+
+<Link to="/">Dashboard</Link>
+<Link to="/create">Create</Link>
+<Link to="/portfolios">Portfolios</Link>
+<Link to="/login">Login</Link>
+<Link to="/register">Register</Link>
+
+</div>
 
     </div>
   );
@@ -42,10 +48,14 @@ function App() {
       <Navbar />
 
       <Routes>
-        <Route path="/" element={<Dashboard />} />
-        <Route path="/create" element={<Create />} />
-        <Route path="/portfolios" element={<Portfolios />} />
-      </Routes>
+
+<Route path="/" element={<Dashboard/>}/>
+<Route path="/create" element={<Create/>}/>
+<Route path="/portfolios" element={<Portfolios/>}/>
+<Route path="/login" element={<Login/>}/>
+<Route path="/register" element={<Register/>}/>
+
+</Routes>
 
     </BrowserRouter>
   );

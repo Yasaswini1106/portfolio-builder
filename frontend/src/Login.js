@@ -1,47 +1,48 @@
-import React,{useState} from "react";
+import React, { useState } from "react";
 import axios from "axios";
-import {useNavigate} from "react-router-dom";
 
 function Login(){
 
-const [email,setEmail]=useState("");
-const [password,setPassword]=useState("");
+const [email,setEmail] = useState("");
+const [password,setPassword] = useState("");
 
-const navigate = useNavigate();
+const loginUser = async () => {
 
-const login = async()=>{
+const res = await axios.post("http://localhost:5000/login",{
+email,
+password
+});
 
-const res = await axios.post(
-"http://localhost:5000/login",
-{email,password}
-);
-
-localStorage.setItem("token",res.data.token);
-
-navigate("/dashboard");
+alert(res.data.message || "Login successful");
 
 };
 
 return(
 
-<div className="auth-container">
-
-<div className="auth-card">
+<div className="container mt-5">
 
 <h2>Login</h2>
 
-<input placeholder="Email"
+<input
+type="email"
+placeholder="Enter email"
+className="form-control mb-3"
 onChange={(e)=>setEmail(e.target.value)}
 />
 
-<input type="password"
-placeholder="Password"
+<input
+type="password"
+placeholder="Enter password"
+className="form-control mb-3"
 onChange={(e)=>setPassword(e.target.value)}
 />
 
-<button onClick={login}>Login</button>
-
-</div>
+<button
+className="btn btn-primary"
+onClick={loginUser}
+>
+Login
+</button>
 
 </div>
 

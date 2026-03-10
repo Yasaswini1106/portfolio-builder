@@ -179,3 +179,69 @@ const PORT = 5000;
 app.listen(PORT, ()=>{
  console.log(`Server running on port ${PORT}`);
 });
+
+const {OAuth2Client} = require("google-auth-library");
+
+const client = new OAuth2Client("YOUR_GOOGLE_CLIENT_ID");
+
+app.post("/google-login", async (req,res)=>{
+
+const {token} = req.body;
+
+const ticket = await client.verifyIdToken({
+idToken:token,
+audience:"YOUR_GOOGLE_CLIENT_ID"
+});
+
+const payload = ticket.getPayload();
+
+const email = payload.email;
+
+let user = await User.findOne({email});
+
+if(!user){
+ user = new User({email});
+ await user.save();
+}
+
+const jwtToken = jwt.sign({id:user._id},"secretkey");
+
+res.json({token:jwtToken});
+
+});
+
+const PDFDocument = require("pdfkit");
+
+app.get("/download/:id", async(req,res)=>{
+
+const portfolio = await Portfolio.findById(req.params.id);
+
+const doc = new PDFDocument();
+
+res.setHeader("Content-Type","application/pdf");
+
+doc.pipe(res);
+
+doc.fontSize(25).text(portfolio.name);
+
+doc.moveDown();
+doc.fontSize(18).text("Skills: "+portfolio.skills);
+
+doc.moveDown();
+doc.text("Bio: "+portfolio.bio);
+
+doc.end();
+
+});
+
+app.get("/search", async (req,res)=>{
+
+const query = req.query.q;
+
+const results = await Portfolio.find({
+name:{$regex:query,$options:"i"}
+});
+
+res.json(results);
+
+});
