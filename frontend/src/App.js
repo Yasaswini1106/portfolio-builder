@@ -7,6 +7,10 @@ import Portfolios from "./Portfolios";
 import Login from "./Login";
 import Register from "./Register";
 
+const isLoggedIn = () => {
+return localStorage.getItem("token") !== null;
+};
+
 function Dashboard() {
   return (
     <div className="page">
@@ -27,15 +31,14 @@ function Navbar() {
         Portfolio Builder
       </div>
 
-      <div className="nav-links">
-
-<Link to="/">Dashboard</Link>
-<Link to="/create">Create</Link>
-<Link to="/portfolios">Portfolios</Link>
-<Link to="/login">Login</Link>
-<Link to="/register">Register</Link>
-
-</div>
+      <button
+onClick={()=>{
+localStorage.removeItem("token");
+window.location.href="/login";
+}}
+>
+Logout
+</button>
 
     </div>
   );
@@ -49,11 +52,23 @@ function App() {
 
       <Routes>
 
-<Route path="/" element={<Dashboard/>}/>
-<Route path="/create" element={<Create/>}/>
-<Route path="/portfolios" element={<Portfolios/>}/>
 <Route path="/login" element={<Login/>}/>
 <Route path="/register" element={<Register/>}/>
+
+<Route
+path="/dashboard"
+element={isLoggedIn() ? <Dashboard/> : <Login/>}
+/>
+
+<Route
+path="/create"
+element={isLoggedIn() ? <Create/> : <Login/>}
+/>
+
+<Route
+path="/portfolios"
+element={isLoggedIn() ? <Portfolios/> : <Login/>}
+/>
 
 </Routes>
 
