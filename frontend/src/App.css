@@ -88,3 +88,17 @@ body{
   border-radius:10px;
   border:1px solid #eee;
 }
+
+.logout-btn{
+ background:#ff4d4d;
+ color:white;
+ border:none;
+ padding:8px 14px;
+ border-radius:6px;
+ cursor:pointer;
+ margin-left:10px;
+}
+
+.logout-btn:hover{
+ background:#e60000;
+}

@@ -14,7 +14,7 @@ password
 });
 
 alert("User Registered");
-
+window.location.href="/login";
 };
 
 return(

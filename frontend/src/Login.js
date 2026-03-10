@@ -1,52 +1,64 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-function Login(){
+function Login() {
 
-const [email,setEmail] = useState("");
-const [password,setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-const loginUser = async () => {
+  const loginUser = async () => {
 
-const res = await axios.post("http://localhost:5000/login",{
-email,
-password
-});
+    try {
 
-alert(res.data.message || "Login successful");
+      const res = await axios.post("http://localhost:5000/login", {
+        email: email,
+        password: password
+      });
 
-};
+      alert(res.data.message || "Login successful");
 
-return(
+      localStorage.setItem("token", res.data.token);
 
-<div className="container mt-5">
+      window.location.href = "/dashboard";
 
-<h2>Login</h2>
+    } catch (err) {
 
-<input
-type="email"
-placeholder="Enter email"
-className="form-control mb-3"
-onChange={(e)=>setEmail(e.target.value)}
-/>
+      alert("Login failed");
 
-<input
-type="password"
-placeholder="Enter password"
-className="form-control mb-3"
-onChange={(e)=>setPassword(e.target.value)}
-/>
+    }
 
-<button
-className="btn btn-primary"
-onClick={loginUser}
->
-Login
-</button>
+  };
 
-</div>
+  return (
 
-);
+    <div className="container mt-5">
+
+      <h2>Login</h2>
+
+      <input
+        type="email"
+        placeholder="Enter Email"
+        className="form-control mb-3"
+        onChange={(e) => setEmail(e.target.value)}
+      />
+
+      <input
+        type="password"
+        placeholder="Enter Password"
+        className="form-control mb-3"
+        onChange={(e) => setPassword(e.target.value)}
+      />
+
+      <button
+        className="btn btn-primary"
+        onClick={loginUser}
+      >
+        Login
+      </button>
+
+    </div>
+
+  );
 
 }
 
